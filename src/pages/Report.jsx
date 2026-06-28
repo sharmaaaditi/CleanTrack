@@ -1,9 +1,5 @@
 function Report() {
-  return (
-    <div>
-      <h1>Report Page</h1>
-    </div>
-  );
+  return <h1>Report Page</h1>;
 }
 
 export default Report;
