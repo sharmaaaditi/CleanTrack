@@ -207,12 +207,220 @@ function ReportForm({ onSubmit }) {
     }, 800);
   };
 
-  return{
-    
-  }
+  return(
+    <form className="report-form" onSubmit={handleSubmit} noValidate>
+      <div className="form-group">
+        <lable htmlFor="report-name">
+          Your Name <span ClassName="required">*</span>
+        </lable>
+         <input
+          type="text"
+          id="report-name"
+          className={`form-input ${errors.name ? "error" : ""}`}
+          placeholder="e.g. Chirag Sharma"
+          value={fields.name}
+          onChange={(e) => set("name", e.target.value)}
+        />
+        {errors.name && <span className="error-text">{errors.name}</span> }
+      </div>
 
+      <div className="form-section">
+        <h3 className="form-section-title">
+          <span className="section-icon"></span> Location Details
+        </h3>
 
+        <div className="form-row">
+          <div className="form-group">
+            <lable htmlform="report-country">
+              country<span className = "required">*</span>
+            </lable>
 
+            <select
+              id="report-country"
+              className={`form-select ${errors.country ? "error" : ""}`}
+              value={fields.country}
+              onChange={(e) => set("country", e.target.value)}
+              disabled={loading.countries}
+            >
+              <option value="">
+                {loading.countries ? "Loading..." : "— Select country —"}
+              </option>
+              {countries.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+
+            {errors.country && <span className="error-text">{errors.country}</span>}
+
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="report-state">
+              State <span className="required">*</span>
+            </label>
+            <select
+              id="report-state"
+              className={`form-select ${errors.state ? "error" : ""}`}
+              value={fields.state}
+              onChange={(e) => set("state", e.target.value)}
+              disabled={!fields.country || loading.states}
+            >
+              <option value="">
+                {loading.states
+                  ? "Loading..."
+                  : !fields.country
+                  ? " Select country first "
+                  : states.length === 0
+                  ? " No states found "
+                  : " Select state "}
+              </option>
+              {states.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            {errors.state && <span className="error-text">{errors.state}</span>}
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="report-city">
+              City<span className="required">*</span>
+            </label>
+            <select
+              id="report-city"
+              className={`form-select ${errors.city ? "error" : ""}`}
+              value={fields.city}
+              onChange={(e) => set("city", e.target.value)}
+              disabled={!fields.state || loading.cities}
+            >
+              <option value="">
+                {loading.cities
+                  ? "Loading..."
+                  : !fields.state
+                  ? " Select state first "
+                  : cities.length === 0
+                  ? " No cities found "
+                  : " Select city "}
+              </option>
+              {cities.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            {errors.city && <span className="error-text">{errors.city}</span>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="report-area">Area / Locality</label>
+            <input
+              type="text"
+              id="report-area"
+              className="form-input"
+              placeholder="e.g. Sector 15, Vasundhara"
+              value={fields.area}
+              onChange={(e) => set("area", e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="report-location-details">Location Details (optional)</label>
+          <input
+            type="text"
+            id="report-location-details"
+            className="form-input"
+            placeholder="e.g. Near main market, opposite SBI bank"
+            value={fields.locationDetails}
+            onChange={(e) => set("locationDetails", e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="report-issue-type">
+            Issue Type <span className="required">*</span>
+          </label>
+          <select
+            id="report-issue-type"
+            className={`form-select ${errors.issueType ? "error" : ""}`}
+            value={fields.issueType}
+            onChange={(e) => set("issueType", e.target.value)}
+          >
+            <option value="">— Select type —</option>
+            {ISSUE_TYPES.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+          {errors.issueType && <span className="error-text">{errors.issueType}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="report-severity">
+            Severity <span className="required">*</span>
+          </label>
+          <select
+            id="report-severity"
+            className={`form-select ${errors.severity ? "error" : ""}`}
+            value={fields.severity}
+            onChange={(e) => set("severity", e.target.value)}
+          >
+            <option value="">— Select severity —</option>
+            {SEVERITY_LEVELS.map((l) => (
+              <option key={l.value} value={l.value}>{l.label}</option>
+            ))}
+          </select>
+          {errors.severity && <span className="error-text">{errors.severity}</span>}
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="report-description">
+          Description <span className="required">*</span>
+        </label>
+        <textarea
+          id="report-description"
+          className={`form-textarea ${errors.description ? "error" : ""}`}
+          placeholder="Describe the issue — since when, how widespread, any health risk..."
+          rows="5"
+          value={fields.description}
+          onChange={(e) => set("description", e.target.value)}
+        />
+        <div className="char-count">{fields.description.length} / 1000</div>
+        {errors.description && <span className="error-text">{errors.description}</span>}
+      </div>
+
+      <div className="form-group">
+        <label>Image Proof (optional)</label>
+        {!imagePreview ? (
+          <div className="image-upload-area">
+            <input
+              type="file"
+              id="report-image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file-input-hidden"
+            />
+            <label htmlFor="report-image" className="image-upload-label">
+              <span className="upload-icon">📷</span>
+              <span className="upload-text">Click to upload or drag & drop</span>
+              <span className="upload-hint">PNG, JPG up to 5MB</span>
+            </label>
+          </div>
+        ) : (
+          <div className="image-preview-container">
+            <img src={imagePreview} alt="preview" className="image-preview" />
+            <button type="button" className="remove-image-btn" onClick={removeImage}>
+              ✕ Remove
+            </button>
+          </div>
+        )}
+      </div>
+
+      <button type="submit" className="btn-submit" disabled={submitting}>
+        {submitting ? <><span className="spinner" /> Submitting...</> : "Submit Report"}
+      </button>
+    </form>
+  );
 }
+
 
 export default ReportForm;
